@@ -96,6 +96,11 @@ export function StepButtonCluster(props: StepButtonProps) {
       {t("REBOOT")}
     </StepButton>,
     <StepButton {...commonStepProps}
+      step={{ kind: "flash_firmware", args: { package: "arduino_firmware" } }}
+      color="brown">
+      {t("REFLASH FIRMWARE")}
+    </StepButton>,
+    <StepButton {...commonStepProps}
       step={{ kind: "emergency_lock", args: {} }}
       color="red">
       {t("E-STOP")}

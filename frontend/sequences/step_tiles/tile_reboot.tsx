@@ -5,11 +5,6 @@ import { StepWrapper, StepHeader, StepContent } from "../step_ui/index";
 import { t } from "../../i18next_wrapper";
 import { ALLOWED_PACKAGES, SequenceBodyItem, Reboot } from "farmbot";
 import { editStep } from "../../api/crud";
-// import { StepRadio } from "../step_ui/step_radio";
-// const PACKAGE_CHOICES = (): Record<ALLOWED_PACKAGES, string> => ({
-//   "arduino_firmware": t("Just the Arduino"),
-//   "farmbot_os": t("Entire system")
-// });
 
 function assertReboot(x: SequenceBodyItem): asserts x is Reboot {
   if (x.kind !== "reboot") {

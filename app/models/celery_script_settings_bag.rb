@@ -16,9 +16,9 @@ module CeleryScriptSettingsBag
   end
 
   PIN_TYPE_MAP = { "Peripheral" => Peripheral,
-                  "Sensor" => Sensor,
-                  "BoxLed3" => BoxLed,
-                  "BoxLed4" => BoxLed }
+                   "Sensor" => Sensor,
+                   "BoxLed3" => BoxLed,
+                   "BoxLed4" => BoxLed }
   ALLOWED_AXIS = %w(x y z all)
   ALLOWED_ASSERTION_TYPES = %w(abort recover abort_recover continue)
   ALLOWED_CHANGES = %w(add remove update)
@@ -251,7 +251,9 @@ module CeleryScriptSettingsBag
       # outside of the API. If `package` _was_ declared as a native enum (rather
       # than a string), it would cause false type errors in FE/FBJS.
       blk: ->(node) do
-        manual_enum(ALLOWED_PACKAGES, node, BAD_PACKAGE)
+        unless node.parent.kind.to_s == "flash_firmware"
+          manual_enum(ALLOWED_PACKAGES, node, BAD_PACKAGE)
+        end
       end,
     },
     axis: {
@@ -529,7 +531,7 @@ module CeleryScriptSettingsBag
         resource_id = n.args.fetch(:point_group_id).value
         check_resource_type(n, "PointGroup", resource_id, Device.current)
       end,
-    }
+    },
   }.map { |(name, list)| Corpus.node(name, **list) }
 
   HASH = Corpus.as_json
