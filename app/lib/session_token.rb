@@ -46,9 +46,10 @@ class SessionToken < AbstractJwtToken
                beta_os_update_server: BETA_OS_URL }])
   end
 
-  def self.as_json(user, aud, fbos_version)
+  def self.as_json(user, aud, fbos_version, exp = EXPIRY.from_now.to_i)
     { token: SessionToken.issue_to(user, iss: $API_URL,
                                          aud: aud,
+                                         exp: exp,
                                          fbos_version: fbos_version),
       user: user }
   end

@@ -5,8 +5,10 @@ describe Device do
   let(:user) { device.users.first }
 
   it "creates a token" do
-    jwt = device.help_customer
-    expect(jwt).to be_kind_of(String)
+    expect do
+      jwt = device.help_customer
+      expect(jwt[:token]).to be_kind_of(SessionToken)
+    end.to output(/localStorage\[\'session\'\]/).to_stdout
   end
 
   it "is associated with a user" do
