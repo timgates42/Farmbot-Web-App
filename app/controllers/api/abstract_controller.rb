@@ -41,7 +41,7 @@ module Api
     end
 
     rescue_from Errors::Forbidden do |exc|
-      sorry "You can't perform that action. #{exc.message}", 403
+      return sorry "You can't perform that action. #{exc.message}", 403
     end
 
     ONLY_JSON = "This is a JSON API. " \
