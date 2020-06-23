@@ -2,25 +2,25 @@ module Api
   class TokensController < Api::AbstractController
     skip_before_action :authenticate_user!, only: :create
     skip_before_action :check_fbos_version, only: [:create, :show]
-    before_action      :clean_out_old_tokens
+    before_action :clean_out_old_tokens
 
-    CREDS        = Auth::CreateTokenFromCredentials
-    NO_CREDS     = Auth::CreateToken
+    CREDS = Auth::CreateTokenFromCredentials
+    NO_CREDS = Auth::CreateToken
     NO_USER_ATTR = "API requests need a `user` attribute that is a JSON object."
 
     # Give you the same token, but reloads all claims except `exp`
     def show
-      mutate Auth::ReloadToken
-        .run(jwt: request.headers["Authorization"], fbos_version: fbos_version)
+      mutate Auth::ReloadToken.run(jwt: request.headers["Authorization"],
+                                   fbos_version: fbos_version)
     end
 
     def create
       if_properly_formatted do |auth_params|
         klass = (auth_params[:credentials]) ? CREDS : NO_CREDS
         mutate klass
-          .run(auth_params)
-          .tap { |result| maybe_halt_login(result) }
-          .tap { |result| mark_as_seen(result.result[:user].device) if result.result }
+                 .run(auth_params)
+                 .tap { |result| maybe_halt_login(result) }
+                 .tap { |result| mark_as_seen(result.result[:user].device) if result.result }
       end
     end
 
@@ -51,16 +51,16 @@ module Api
       user = raw_json.fetch(:user, {})
       # If data handling for this method gets any more complicated,
       # extract into a mutation.
-      if(user.is_a?(Hash))
-        yield({ email:          (user[:email] || "").downcase,
-                password:       user[:password],
-                credentials:    user[:credentials],
+      if (user.is_a?(Hash))
+        yield({ email: (user[:email] || "").downcase,
+                password: user[:password],
+                credentials: user[:credentials],
                 agree_to_terms: !!user[:agree_to_terms],
-                host:           $API_URL,
-                aud:            guess_aud_claim,
-                fbos_version:   fbos_version })
+                host: $API_URL,
+                aud: guess_aud_claim,
+                fbos_version: fbos_version })
       else
-        render json: {error: NO_USER_ATTR}, status: 422
+        render json: { error: NO_USER_ATTR }, status: 422
       end
     end
   end
