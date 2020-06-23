@@ -198,6 +198,7 @@ module Api
 
     def sorry(msg, status = 422)
       render json: { error: msg }, status: status
+      return false
     end
 
     TPL = "FBOS received a 422 error %s ERRORS: %s PARAMS: %s"
