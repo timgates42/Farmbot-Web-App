@@ -24,6 +24,11 @@ module Api
     skip_before_action :verify_authenticity_token
     after_action :skip_set_cookies_header
 
+    rescue_from(AbstractController::DoubleRenderError) do
+      error = "Token refresh and FBOS upgrade required."
+      render json: { error: error }, status: 401
+    end
+
     rescue_from(CeleryScript::TypeCheckError) do |err|
       sorry err.message
     end
